@@ -1,25 +1,34 @@
-import logo from './logo.svg';
-import './App.css';
+import { Suspense } from "react";
+import { fetchColorData } from "./api";
 
-function App() {
+const resource = fetchColorData();
+
+const App = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <h1>Data fetching with Suspense</h1>
+      <Suspense fallback={<h1>Loading color...</h1>}>
+        <ColorDetails />
+      </Suspense>
     </div>
   );
-}
+};
+
+const ColorDetails = () => {
+  const color = resource.color.read();
+  return (
+    <div style={{ display: "flex", alignItems: "center" }}>
+      <div
+        style={{
+          width: 100,
+          height: 100,
+          marginRight: 16,
+          backgroundColor: color.hex_value,
+        }}
+      ></div>
+      <h1>Color name : {color.color_name}</h1>
+    </div>
+  );
+};
 
 export default App;
